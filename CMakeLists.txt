@@ -11,6 +11,14 @@ set(GLFW_INSTALL ON)
 ### Put the names of your source files here ###
 set(SRC_FILES 
     main.cpp
+    exception.hpp typedefs.hpp
+    app.hpp app.cpp
+    input.hpp input.cpp
+)
+
+set(GRAPHICS_SRC_FILES 
+    renderer.hpp renderer.cpp
+    color.hpp
 )
 
 set(EXTERNAL_SRC_FILES 
@@ -18,11 +26,13 @@ set(EXTERNAL_SRC_FILES
 )
 
 list(TRANSFORM SRC_FILES PREPEND "src/")
+list(TRANSFORM GRAPHICS_SRC_FILES PREPEND "src/graphics/")
 list(TRANSFORM EXTERNAL_SRC_FILES PREPEND "src/external/")
 
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${EXTERNAL_SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${GRAPHICS_SRC_FILES} ${EXTERNAL_SRC_FILES})
 
 add_subdirectory(submodules/glfw)
+add_subdirectory(submodules/glm)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
@@ -30,10 +40,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 target_link_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/lib/lib)
 
 ### Add include directories here ###
-target_include_directories(${PROJECT_NAME} PRIVATE lib/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src lib/include)
 
 ### Uncomment this line if you want the standard libraries to be linked statically ###
 # target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
 
 ### Use this line to link external libraries
-target_link_libraries(${PROJECT_NAME} glfw3)
+target_link_libraries(${PROJECT_NAME} glfw3 glm)
