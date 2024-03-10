@@ -23,11 +23,15 @@ set(GRAPHICS_SRC_FILES
     vertex_buffer_layout.hpp vertex_buffer_layout.cpp
     index_buffer.hpp index_buffer.cpp
     shader.hpp shader.cpp
-    shader_pipeline.hpp shader_pipeline.cpp
+    shader_pipeline.hpp shader_pipeline.cpp shader_pipeline.tpp
     primitives.hpp primitives.cpp
     mesh.hpp mesh.cpp
     shaded_mesh.hpp shaded_mesh.cpp
     model.hpp model.cpp
+    transform.hpp transform.cpp
+    voxel_transform.hpp voxel_transform.cpp
+    camera.hpp camera.cpp
+    voxel.hpp voxel.cpp
 )
 
 set(EXTERNAL_SRC_FILES 

@@ -5,6 +5,13 @@
 
 namespace prim
 {
+    class DefaultPrimitives
+    {
+    public:
+        Unp<Mesh> cube;
+        Unp<Mesh> plane;
+    };
+
     class Primitives
     {
     public:

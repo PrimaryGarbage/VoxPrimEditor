@@ -3,9 +3,8 @@
 #include "graphics/renderer.hpp"
 #include "input.hpp"
 #include "exception.hpp"
+#include "graphics/voxel.hpp"
 #include "graphics/primitives.hpp"
-#include "graphics/shader_pipeline.hpp"
-#include "graphics/shader.hpp"
 
 #define BEGIN_MAIN_LOOP try{
 #define END_MAIN_LOOP }catch(Exception ex){logger.logError(ex.what());}
@@ -27,19 +26,28 @@ namespace prim
     {
         renderer->setClearColor(Colors::black);
 
-        Mesh cubeMesh = Primitives::cube(1.0f);
+        Voxel voxel;
+        voxel.transform.scale *= 3;
+        voxel.albedo = Colors::blue;
+
+        const static float speed = 0.1f;
+        Camera* camera = renderer->getCamera();
+        camera->transform.position.z = 10.0f;
 
         while(!renderer->windowShouldClose())
         {
             BEGIN_MAIN_LOOP
 
             //// Draw here ////
-            renderer->draw(cubeMesh);
+            voxel.draw(*renderer.get());
             ///////////////////
 
             renderer->endFrame();
             input->reset();
             glfwPollEvents();
+
+            camera->transform.position.x += input->getAxis("Horizontal") * speed;
+            camera->transform.position.y += input->getAxis("Vertical") * speed;
 
             END_MAIN_LOOP
         }

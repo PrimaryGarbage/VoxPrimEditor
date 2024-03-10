@@ -1,9 +1,29 @@
 #include "shader_pipeline.hpp"
 #include "opengl_utils.hpp"
 #include "external/glad.h"
+#include "opengl_utils.hpp"
+#include "exception.hpp"
 
 namespace prim
 {
+    i32 ShaderPipeline::getUniformLocation(const char* name) const
+    {
+        const auto& foundIter = uniformLocationCache.find(name);
+        if(foundIter == uniformLocationCache.end())
+        {
+            i32 uniformId;
+            glCall(uniformId = glGetUniformLocation(glId, name));
+            if(uniformId < 0) throw EXCEPTION(std::format("Failed to find shader uniform with the given name. Name: {0}", name));
+
+            uniformLocationCache[name] = uniformId;
+            return uniformId;
+        }
+        else
+        {
+            return foundIter->second;
+        }
+    }
+
     ShaderPipeline::ShaderPipeline(std::initializer_list<const Shader*> shaders)
     {
         glCall(glId = glCreateProgram());
@@ -21,7 +41,8 @@ namespace prim
         {
             std::string errorMessage;
             errorMessage.reserve(infoLogLength + 1);
-            Logger::inst().logError("Error during shader program linkage. Error message: {0}", errorMessage);
+            glCall(glGetProgramInfoLog(glId, infoLogLength, NULL, &errorMessage[0]));
+            Logger::inst().logError("Error during shader program linkage. Error message: {0}", errorMessage.c_str());
         }
         else
         {
@@ -49,3 +70,5 @@ namespace prim
         glUseProgram(0);
     }
 }
+
+#include "shader_pipeline.tpp"

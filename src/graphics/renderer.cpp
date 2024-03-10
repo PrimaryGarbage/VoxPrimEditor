@@ -6,6 +6,7 @@
 #include "input.hpp"
 #include "opengl_utils.hpp"
 #include "shader_pipeline.hpp"
+#include "primitives.hpp"
 #include <functional>
 
 namespace prim
@@ -54,6 +55,11 @@ namespace prim
             currentShader = defaultShader.get();
             currentShader->bind();
 
+            // setup default primitives for common use. Maybe there's a better way to handle this
+            defaultPrimitives = std::make_unique<DefaultPrimitives>();
+            defaultPrimitives->cube.reset(new Mesh(Primitives::cube(1.0f)));
+            defaultPrimitives->plane.reset(new Mesh(Primitives::plane(1.0f, 1.0f)));
+
             rendererMapping[window] = this;
         }
         catch(Exception ex)
@@ -66,6 +72,10 @@ namespace prim
 
     Renderer::~Renderer()
     {
+        // delete managed openGL resources before calling to glfwTerminate()
+        defaultShader.reset();
+        defaultPrimitives.reset();
+
         glfwDestroyWindow(window);
         rendererMapping.erase(window);
         window = nullptr;
@@ -89,11 +99,18 @@ namespace prim
         return windowSize;
     }
     
+    const ShaderPipeline* Renderer::getCurrentShader() const noexcept
+    {
+        return currentShader;
+    }
+    
     void Renderer::endFrame()
     {
         glfwSwapBuffers(window);
         glCall(glViewport(0, 0, windowSize.x, windowSize.y));
         glCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+
+        isVPMatrixStale = true;
     }
 
     void Renderer::setClearColor(Color color) noexcept
@@ -105,6 +122,7 @@ namespace prim
     void Renderer::draw(const Mesh& mesh)
     {
         if(!currentShader) setShader(defaultShader.get());
+
         mesh.bind();
         glCall(glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL));
     }
@@ -118,19 +136,34 @@ namespace prim
     
     void Renderer::draw(const Model& model)
     {
-        if(!currentShader) setShader(defaultShader.get());
         for(const ShadedMesh& mesh : model.getMeshes())
         {
             mesh.bind();
-            glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL);
+            glCall(glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL));
         }
         setShader(currentShader);
     }
     
-    void Renderer::setShader(const ShaderPipeline* shader)
+    void Renderer::setShader(const ShaderPipeline* shader) noexcept
     {
         currentShader = shader;
         currentShader->bind();
+    }
+    
+    void Renderer::setModelMatrix(glm::mat4 matrix) noexcept
+    {
+        if(isVPMatrixStale) updateVPMatrix();
+        currentShader->setUniform("mvp", viewProjectMatrix * matrix);
+    }
+    
+    Camera* Renderer::getCamera() noexcept
+    {
+        return &camera;
+    }
+    
+    const DefaultPrimitives* Renderer::getDefaultPrimitives() const noexcept
+    {
+        return defaultPrimitives.get();
     }
 
     // glfw callbacks //
@@ -142,5 +175,11 @@ namespace prim
     void Renderer::framebufferSizeCallback(GLFWwindow* window, i32 width, i32 height)
     {
         rendererMapping[window]->windowSize = glm::uvec2(width, height);
+    }
+    
+    void Renderer::updateVPMatrix()
+    {
+        viewProjectMatrix = camera.getProjectionMatrix(windowSize) * camera.getViewMatrix();
+        isVPMatrixStale = false;
     }
 }

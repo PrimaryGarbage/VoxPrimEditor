@@ -2,6 +2,8 @@
 #define __SHADER_PIPELINE_HPP__
 
 #include <vector>
+#include <unordered_map>
+#include "glm/glm.hpp"
 #include "shader.hpp"
 
 namespace prim
@@ -10,12 +12,18 @@ namespace prim
     {
     private:
         u32 glId;
+        mutable std::unordered_map<std::string, u32> uniformLocationCache;
+
+        i32 getUniformLocation(const char* name) const;
     public:
         ShaderPipeline(std::initializer_list<const Shader*> shaders);
         ~ShaderPipeline();
 
         void bind() const noexcept;
         void unbind() const noexcept;
+
+        template<class T>
+        void setUniform(const char* name, T value) const;
     };
 }
 
