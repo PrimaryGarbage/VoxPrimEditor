@@ -13,6 +13,7 @@
 
 namespace prim
 {
+    enum class LogLevel { NoLog, Error, Warning, Info };
 
     class Logger
     {
@@ -31,9 +32,19 @@ namespace prim
         }
 
     public:
+        LogLevel logLevel = LogLevel::Info;
+
+        static const Logger& inst()
+        {
+            static Logger defaultInstanceLogger;
+            return defaultInstanceLogger;
+        }
+
         template<class... Args>
         void logInfo(std::string messageTemplate, Args&&... args) const noexcept
         {
+            if(static_cast<int>(logLevel) < static_cast<int>(LogLevel::Info)) return;
+
             std::string message = std::vformat(buildMessagePrefix(INFO_PREFIX) + messageTemplate, std::make_format_args(args...));
             std::cout << message << std::endl;
         }
@@ -41,6 +52,8 @@ namespace prim
         template<class... Args>
         void logWarning(std::string messageTemplate, Args&&... args) const noexcept
         {
+            if(static_cast<int>(logLevel) < static_cast<int>(LogLevel::Warning)) return;
+
             std::string message = std::vformat(buildMessagePrefix(WARNING_PREFIX) + messageTemplate, std::make_format_args(args...));
             std::cout << message << std::endl;
         }
@@ -48,6 +61,8 @@ namespace prim
         template<class... Args>
         void logError(std::string messageTemplate, Args&&... args) const noexcept
         {
+            if(static_cast<int>(logLevel) < static_cast<int>(LogLevel::Error)) return;
+
             std::string message = std::vformat(buildMessagePrefix(ERROR_PREFIX) + messageTemplate, std::make_format_args(args...));
             std::cout << message << std::endl;
         }

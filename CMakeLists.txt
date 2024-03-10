@@ -19,6 +19,15 @@ set(SRC_FILES
 set(GRAPHICS_SRC_FILES 
     renderer.hpp renderer.cpp
     color.hpp
+    vertex_buffer.hpp vertex_buffer.cpp
+    vertex_buffer_layout.hpp vertex_buffer_layout.cpp
+    index_buffer.hpp index_buffer.cpp
+    shader.hpp shader.cpp
+    shader_pipeline.hpp shader_pipeline.cpp
+    primitives.hpp primitives.cpp
+    mesh.hpp mesh.cpp
+    shaded_mesh.hpp shaded_mesh.cpp
+    model.hpp model.cpp
 )
 
 set(EXTERNAL_SRC_FILES 

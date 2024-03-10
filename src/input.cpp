@@ -141,6 +141,26 @@ namespace prim
 			}
 		}
 	}
+	
+	void Input::updateGamepadStates()
+	{
+		for(Gamepad& gamepad : gamepads)
+		{
+			GLFWgamepadstate state;
+			glfwGetGamepadState(gamepad.id, &state);
+			for(int i = 0; i < Gamepad::buttonCount; ++i)
+			{
+				gamepad.buttons[i].just = state.buttons[i] != gamepad.buttons[i].pressed;
+				gamepad.buttons[i].pressed = state.buttons[i] == GLFW_PRESS;
+			}
+			for(int i = 0; i < Gamepad::axisCount; ++i)
+			{
+				gamepad.axes[i] = state.axes[i];
+			}
+		}
+
+		isGamepadStateStale = false;
+	}
 
 	void Input::charCallback(unsigned int codepoint)
 	{
@@ -195,8 +215,7 @@ namespace prim
 		addAxis("Vertical", { GamepadAxis::LeftY, std::pair(Key::w, Key::s), std::pair(Key::up, Key::down) });
 	}
 
-	// should be called from mainLoop
-	void Input::update()
+	void Input::reset()
 	{
 		for(int i = 0; i < MouseInfo::buttonCount; ++i)
 		{
@@ -209,21 +228,7 @@ namespace prim
 		}
 
 		charInput.clear();
-
-		for(Gamepad& gamepad : gamepads)
-		{
-			GLFWgamepadstate state;
-			glfwGetGamepadState(gamepad.id, &state);
-			for(int i = 0; i < Gamepad::buttonCount; ++i)
-			{
-				gamepad.buttons[i].just = state.buttons[i] != gamepad.buttons[i].pressed;
-				gamepad.buttons[i].pressed = state.buttons[i] == GLFW_PRESS;
-			}
-			for(int i = 0; i < Gamepad::axisCount; ++i)
-			{
-				gamepad.axes[i] = state.axes[i];
-			}
-		}
+		isGamepadStateStale = true;
 	}
 
 	bool Input::isPressed(const Key key)
@@ -238,6 +243,7 @@ namespace prim
 
 	bool Input::isPressed(const GamepadButton button, const int gamepadId)
 	{
+		if(isGamepadStateStale) updateGamepadStates();
 		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
 		if(gamepad == gamepads.end()) return false;
 		return gamepad->buttons[static_cast<int>(button)].pressed;
@@ -270,6 +276,7 @@ namespace prim
 
 	bool Input::isJustPressed(const GamepadButton button, const int gamepadId)
 	{
+		if(isGamepadStateStale) updateGamepadStates();
 		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
 		if(gamepad == gamepads.end()) return false;
 		return gamepad->buttons[static_cast<int>(button)].pressed && gamepad->buttons[static_cast<int>(button)].just;
@@ -302,6 +309,7 @@ namespace prim
 
 	bool Input::isJustReleased(const GamepadButton button, const int gamepadId)
 	{
+		if(isGamepadStateStale) updateGamepadStates();
 		auto gamepad = std::find_if(gamepads.begin(), gamepads.end(), [gamepadId](const Gamepad& g) { return g.id == gamepadId; });
 		if(gamepad == gamepads.end()) return false;
 		return !gamepad->buttons[static_cast<int>(button)].pressed && gamepad->buttons[static_cast<int>(button)].just;

@@ -47,8 +47,8 @@ configure() {
 
 build() {
 	echo -e "Building..."
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE; } \
+	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
+	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
@@ -65,6 +65,11 @@ clean_all() {
 	echo -e "Cleaning..."
 	rm -rf $CMAKE_BUILD_DIR/{*,.*} &> /dev/null
 	echo -e "${GREEN}All clean!${NOCOLOR}"
+}
+
+copy_res_dir() {
+	rm -rf $CMAKE_BUILD_DIR/res 2> /dev/null
+	cp -r res $CMAKE_BUILD_DIR/
 }
 
 change_build_type() {

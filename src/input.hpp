@@ -26,6 +26,7 @@ private:
 	std::vector<Action> actions;
 	std::vector<Axis> axes;
 	std::string charInput;	// utf8 text
+	bool isGamepadStateStale{true};
 
 	// glfw callbacks
 	static void keyCallback_s(GLFWwindow* window, int key, int scancode, int action, int mods); 
@@ -43,13 +44,14 @@ private:
 	void joystickCallback(int jid, int event);
 	void insertCodepointIntoString(unsigned int codepoint, std::string& str);
 	void registerAllGamepads();
+	void updateGamepadStates();
 	void createDefaultActionsAndAxes();
 public:
 	Input(GLFWwindow* window);
 	~Input();
 
-	// call to update input state (preferably at the start of the loop)
-	void update();
+	// call to clear input state (preferably before event polling)
+	void reset();
 	
 	bool isPressed(const Key key);
 	bool isPressed(const MouseButton button);
