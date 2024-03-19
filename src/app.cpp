@@ -22,9 +22,9 @@ namespace prim
     App::~App()
     {}
 
-    int App::run() noexcept
+    int App::run()
     {
-        renderer->setClearColor(Colors::black);
+        renderer->setClearColor(Colors::green);
 
         Voxel voxel;
         voxel.transform.scale *= 3;

@@ -46,6 +46,8 @@ namespace prim
             int gladReturnValue = gladLoadGL();
             if(!gladReturnValue) throw EXCEPTION("Failed to initialize GLAD");
 
+            glCall(glEnable(GL_CULL_FACE));
+
             glCall(glGenVertexArrays(1, &vertexArrayId));
             glCall(glBindVertexArray(vertexArrayId));
 
@@ -150,7 +152,7 @@ namespace prim
         currentShader->bind();
     }
     
-    void Renderer::setModelMatrix(glm::mat4 matrix) noexcept
+    void Renderer::setModelMatrix(glm::mat4 matrix)
     {
         if(isVPMatrixStale) updateVPMatrix();
         currentShader->setUniform("mvp", viewProjectMatrix * matrix);

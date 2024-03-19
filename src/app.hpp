@@ -21,7 +21,7 @@ namespace prim
         App();
         ~App();
 
-        int run() noexcept;
+        int run();
     };
 }
 

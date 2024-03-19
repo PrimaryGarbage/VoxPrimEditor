@@ -53,7 +53,7 @@ namespace prim
         void draw(const ShadedMesh& mesh);
         void draw(const Model& model);
         void setShader(const ShaderPipeline* shader) noexcept;
-        void setModelMatrix(glm::mat4 matrix) noexcept;
+        void setModelMatrix(glm::mat4 matrix);
         Camera* getCamera() noexcept;
         const DefaultPrimitives* getDefaultPrimitives() const noexcept;
     };

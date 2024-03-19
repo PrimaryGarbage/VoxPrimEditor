@@ -5,7 +5,7 @@
 
 namespace prim
 {
-    void Voxel::draw(Renderer& renderer) const noexcept
+    void Voxel::draw(Renderer& renderer) const
     {
         renderer.setModelMatrix(transform.getModelMatrix());
         renderer.getCurrentShader()->setUniform("albedo", albedo);

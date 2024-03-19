@@ -15,7 +15,7 @@ namespace prim
     public:
         VoxelTransform transform;
         Color albedo;
-        void draw(Renderer& renderer) const noexcept;
+        void draw(Renderer& renderer) const;
     };
 }
 

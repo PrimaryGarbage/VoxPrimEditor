@@ -21,6 +21,7 @@ namespace prim
     class VertexBufferLayout
     {
     private:
+        size_t stride{0u};
         std::vector<VertexAttributeLayout> attributes;
     public:
         VertexBufferLayout& pushFloat(bool normalize = false) noexcept;
