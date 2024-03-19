@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
+include(ExternalProject)
 project(VoxPrimEditor VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -44,8 +45,17 @@ list(TRANSFORM EXTERNAL_SRC_FILES PREPEND "src/external/")
 
 add_executable(${PROJECT_NAME} ${SRC_FILES} ${GRAPHICS_SRC_FILES} ${EXTERNAL_SRC_FILES})
 
-add_subdirectory(submodules/glfw)
-add_subdirectory(submodules/glm)
+ExternalProject_Add(
+    glfw_target
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/submodules/glfw
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}/lib
+)
+
+ExternalProject_Add(
+    glm_target
+    SOURCE_DIR ${CMAKE_SOURCE_DIR}/submodules/glm
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}/lib
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 

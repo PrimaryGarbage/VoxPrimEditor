@@ -45,10 +45,15 @@ configure() {
 	cmake $GENERATOR_STRING $CMAKE_VARS_STRING -S . -B $CMAKE_BUILD_DIR
 }
 
+build_libraries() {
+	cmake --build $CMAKE_BUILD_DIR --target glfw_target --config $BUILD_TYPE
+	cmake --build $CMAKE_BUILD_DIR --target glm_target --config $BUILD_TYPE
+}
+
 build() {
 	echo -e "Building..."
-	{ cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
-	|| { configure && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && cmake --install $CMAKE_BUILD_DIR --config $BUILD_TYPE && copy_res_dir; } \
+	{ build_libraries && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_res_dir; } \
+	|| { configure && build_libraries && cmake --build $CMAKE_BUILD_DIR --config $BUILD_TYPE --verbose && copy_res_dir; } \
 	|| { echo -e "${RED}Building failure${NOCOLOR}"; false; }
 }
 
