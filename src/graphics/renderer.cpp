@@ -7,7 +7,9 @@
 #include "opengl_utils.hpp"
 #include "shader_pipeline.hpp"
 #include "primitives.hpp"
+#include "shader_pipeline_type.hpp"
 #include <functional>
+#include <filesystem>
 
 namespace prim
 {
@@ -51,10 +53,8 @@ namespace prim
             glCall(glGenVertexArrays(1, &vertexArrayId));
             glCall(glBindVertexArray(vertexArrayId));
 
-            Shader defaultVertexShader(ShaderType::Vertex, "res/shaders/default_vertex_shader.glsl");
-            Shader defaultFragmentShader(ShaderType::Fragment, "res/shaders/default_fragment_shader.glsl");
-            defaultShader = std::make_unique<ShaderPipeline>(std::initializer_list<const Shader*>{&defaultVertexShader, &defaultFragmentShader});
-            currentShader = defaultShader.get();
+            shaderPipelineCache[ShaderPipelineType::Default] = Unp<ShaderPipeline>(loadShaderPipeline(ShaderPipelineType::Default));
+            currentShader = shaderPipelineCache[ShaderPipelineType::Default].get();
             currentShader->bind();
 
             // setup default primitives for common use. Maybe there's a better way to handle this
@@ -75,7 +75,10 @@ namespace prim
     Renderer::~Renderer()
     {
         // delete managed openGL resources before calling to glfwTerminate()
-        defaultShader.reset();
+        for(auto& shaderPair : shaderPipelineCache)
+        {
+            shaderPair.second.reset();
+        }
         defaultPrimitives.reset();
 
         glfwDestroyWindow(window);
@@ -123,7 +126,7 @@ namespace prim
 
     void Renderer::draw(const Mesh& mesh)
     {
-        if(!currentShader) setShader(defaultShader.get());
+        if(!currentShader) setCurrentShaderPipeline(shaderPipelineCache[ShaderPipelineType::Default].get());
 
         mesh.bind();
         glCall(glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL));
@@ -133,7 +136,7 @@ namespace prim
     {
         mesh.bind();
         glCall(glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL));
-        setShader(currentShader);
+        setCurrentShaderPipeline(currentShader);
     }
     
     void Renderer::draw(const Model& model)
@@ -143,11 +146,13 @@ namespace prim
             mesh.bind();
             glCall(glDrawElements(GL_TRIANGLES, mesh.elementCount(), GL_UNSIGNED_INT, NULL));
         }
-        setShader(currentShader);
+        setCurrentShaderPipeline(currentShader);
     }
     
-    void Renderer::setShader(const ShaderPipeline* shader) noexcept
+    void Renderer::setCurrentShaderPipeline(const ShaderPipeline* shader) noexcept
     {
+        if(currentShader == shader) return;
+
         currentShader = shader;
         currentShader->bind();
     }
@@ -156,6 +161,16 @@ namespace prim
     {
         if(isVPMatrixStale) updateVPMatrix();
         currentShader->setUniform("mvp", viewProjectMatrix * matrix);
+    }
+    
+    ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType tag)
+    {
+        if(!shaderPipelineCache.contains(tag))
+        {
+            shaderPipelineCache[tag] = Unp<ShaderPipeline>(loadShaderPipeline(tag));
+        }
+
+        return shaderPipelineCache[tag].get();
     }
     
     Camera* Renderer::getCamera() noexcept
@@ -183,5 +198,20 @@ namespace prim
     {
         viewProjectMatrix = camera.getProjectionMatrix(windowSize) * camera.getViewMatrix();
         isVPMatrixStale = false;
+    }
+    
+    ShaderPipeline* Renderer::loadShaderPipeline(ShaderPipelineType shaderTag)
+    {
+        using Path = std::filesystem::path;
+
+        static const char* shaderDirPath = "res/shaders";
+
+        Path fullVertexShaderPath = Path(shaderDirPath) / (std::string(shaderFilepaths[static_cast<int>(shaderTag)]) + vertPostfix + shaderExtension);
+        Path fullFragmentShaderPath = Path(shaderDirPath) / (std::string(shaderFilepaths[static_cast<int>(shaderTag)]) + fragPostfix + shaderExtension);
+
+        Shader vertexShader(ShaderType::Vertex, fullVertexShaderPath.string().c_str());
+        Shader fragmentShader(ShaderType::Fragment, fullFragmentShaderPath.string().c_str());
+
+        return new ShaderPipeline({&vertexShader, &fragmentShader});
     }
 }

@@ -33,6 +33,7 @@ set(GRAPHICS_SRC_FILES
     voxel_transform.hpp voxel_transform.cpp
     camera.hpp camera.cpp
     voxel.hpp voxel.cpp
+    shader_pipeline_type.hpp
 )
 
 set(EXTERNAL_SRC_FILES 

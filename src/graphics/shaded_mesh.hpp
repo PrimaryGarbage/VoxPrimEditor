@@ -11,10 +11,10 @@ namespace prim
     {
     private:
         Mesh mesh;
-        ShaderPipeline* shader;
+        ShaderPipeline* shaderPipeline;
 
     public:
-        ShadedMesh(Mesh&& mesh, ShaderPipeline* shader);
+        ShadedMesh(Mesh&& mesh, ShaderPipeline* shaderPipeline);
         ShadedMesh(ShadedMesh&& rhs);
         ShadedMesh& operator=(ShadedMesh&& rhs);
 

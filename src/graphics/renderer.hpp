@@ -17,6 +17,7 @@ namespace prim
 {
     class DefaultPrimitives;
     class ShaderPipeline;
+    enum class ShaderPipelineType;
 
     class Renderer
     {
@@ -25,13 +26,13 @@ namespace prim
 
         GLFWwindow* window;
         glm::uvec2 windowSize;
-        Unp<ShaderPipeline> defaultShader;
         const ShaderPipeline* currentShader;
         Camera camera;
         u32 vertexArrayId;
         glm::mat4 viewProjectMatrix;
         bool isVPMatrixStale{true};
         Unp<DefaultPrimitives> defaultPrimitives;
+        std::unordered_map<ShaderPipelineType, Unp<ShaderPipeline>> shaderPipelineCache;
 
         Logger logger;
 
@@ -39,6 +40,7 @@ namespace prim
         static void framebufferSizeCallback(GLFWwindow* window, i32 width, i32 height);
         
         void updateVPMatrix();
+        ShaderPipeline* loadShaderPipeline(ShaderPipelineType shaderTag);
     public:
         Renderer(u32 windowWidth, u32 windowHeight, const char* windowTitle);
         ~Renderer();
@@ -52,8 +54,9 @@ namespace prim
         void draw(const Mesh& mesh);
         void draw(const ShadedMesh& mesh);
         void draw(const Model& model);
-        void setShader(const ShaderPipeline* shader) noexcept;
+        void setCurrentShaderPipeline(const ShaderPipeline* shader) noexcept;
         void setModelMatrix(glm::mat4 matrix);
+        ShaderPipeline* getShaderPipeline(ShaderPipelineType tag);
         Camera* getCamera() noexcept;
         const DefaultPrimitives* getDefaultPrimitives() const noexcept;
     };

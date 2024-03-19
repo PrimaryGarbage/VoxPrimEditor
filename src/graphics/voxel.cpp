@@ -2,13 +2,16 @@
 #include "renderer.hpp"
 #include "primitives.hpp"
 #include "shader_pipeline.hpp"
+#include "shader_pipeline_type.hpp"
 
 namespace prim
 {
     void Voxel::draw(Renderer& renderer) const
     {
+        ShaderPipeline* shader = renderer.getShaderPipeline(ShaderPipelineType::Voxel);
+        shader->setUniform("albedo", albedo);
         renderer.setModelMatrix(transform.getModelMatrix());
-        renderer.getCurrentShader()->setUniform("albedo", albedo);
+        renderer.setCurrentShaderPipeline(shader);
         renderer.draw(*renderer.getDefaultPrimitives()->cube);
     }
 }
