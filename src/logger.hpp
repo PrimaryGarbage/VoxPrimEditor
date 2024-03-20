@@ -5,6 +5,7 @@
 #include <format>
 #include <string>
 #include <chrono>
+#include <time.h>
 #include <ctime>
 
 #define INFO_PREFIX "[INFO]"
@@ -21,8 +22,10 @@ namespace prim
         static std::string currentDateTimeString(const char* format = "%d-%m-%Y %H:%M:%S")
         {
             std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::tm bt{};
+            localtime_s(&bt, &time);
             std::string timeStr(30, '\0');
-            std::strftime(&timeStr[0], timeStr.size(), format, std::localtime(&time));
+            std::strftime(&timeStr[0], timeStr.size(), format, &bt);
             return timeStr;
         }
 

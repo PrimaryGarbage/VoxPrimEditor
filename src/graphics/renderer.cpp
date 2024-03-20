@@ -1,6 +1,5 @@
 #define GLFW_INCLUDE_NONE
 #include "external/glad.h"
-#include "GLFW/glfw3.h"
 #include "renderer.hpp"
 #include "exception.hpp"
 #include "input.hpp"

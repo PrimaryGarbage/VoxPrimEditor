@@ -1,4 +1,5 @@
 #include "vertex_buffer_layout.hpp"
+#include "typedefs.hpp"
 #include "external/glad.h"
 #include "opengl_utils.hpp"
 

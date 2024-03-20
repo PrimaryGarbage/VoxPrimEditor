@@ -8,10 +8,8 @@
 #include "model.hpp"
 #include "camera.hpp"
 #include "voxel.hpp"
+#include "GLFW/glfw3.h"
 #include <unordered_map>
-
-// forward declaration
-class GLFWwindow;
 
 namespace prim
 {
