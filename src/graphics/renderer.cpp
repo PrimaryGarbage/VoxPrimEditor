@@ -35,7 +35,7 @@ namespace prim
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-            window = glfwCreateWindow(640, 480, "WindowTitle", nullptr, nullptr);
+            window = glfwCreateWindow(windowSize.x, windowSize.y, windowTitle, nullptr, nullptr);
             if(!window) throw EXCEPTION("Failed to create GLFW window.");
 
             glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);

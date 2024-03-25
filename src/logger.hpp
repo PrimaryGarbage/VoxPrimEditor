@@ -1,6 +1,12 @@
 #ifndef __LOGGER_HPP__
 #define __LOGGER_HPP__
 
+#if defined(_WIN32) || defined(WIN32)
+    #define WINDOWS
+#else
+    #define UNIX
+#endif
+
 #include <iostream>
 #include <format>
 #include <string>
@@ -23,7 +29,13 @@ namespace prim
         {
             std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             std::tm bt{};
-            localtime_s(&bt, &time);
+            #if defined(WINDOWS)
+                localtime_s(&bt, &time);
+            #elif defined(UNIX)
+                localtime_r(&time, &bt);
+            #else
+                bt = *std::localtime(&time);
+            #endif
             std::string timeStr(30, '\0');
             std::strftime(&timeStr[0], timeStr.size(), format, &bt);
             return timeStr;
