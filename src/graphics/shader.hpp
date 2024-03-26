@@ -2,20 +2,20 @@
 #define __SHADER_HPP__
 
 #include "typedefs.hpp"
+#include "shader_utils.hpp"
 
 namespace prim
 {
-    enum class ShaderType { Vertex, Fragment, _length };
-    static constexpr const char* ShaderType_s[] = { "Vertex", "Fragment"};
 
     class Shader
     {
     private:
         ShaderType type;
+        ShaderPipelineType pipelineType;
         glenum glType;
         u32 glId;
     public:
-        Shader(ShaderType type, const char* filepath);
+        Shader(ShaderPipelineType pipelineType, ShaderType type, std::string data);
         Shader(Shader&& rhs);
         Shader& operator=(Shader&& rhs);
         ~Shader();

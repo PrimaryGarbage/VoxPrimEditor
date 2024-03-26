@@ -38,7 +38,7 @@ namespace prim
         static void framebufferSizeCallback(GLFWwindow* window, i32 width, i32 height);
         
         void updateVPMatrix();
-        ShaderPipeline* loadShaderPipeline(ShaderPipelineType shaderTag);
+        ShaderPipeline* loadShaderPipeline(ShaderPipelineType type);
     public:
         Renderer(u32 windowWidth, u32 windowHeight, const char* windowTitle);
         ~Renderer();

@@ -6,7 +6,7 @@
 #include "opengl_utils.hpp"
 #include "shader_pipeline.hpp"
 #include "primitives.hpp"
-#include "shader_pipeline_type.hpp"
+#include "resource_manager.hpp"
 #include <functional>
 #include <filesystem>
 
@@ -199,17 +199,10 @@ namespace prim
         isVPMatrixStale = false;
     }
     
-    ShaderPipeline* Renderer::loadShaderPipeline(ShaderPipelineType shaderTag)
+    ShaderPipeline* Renderer::loadShaderPipeline(ShaderPipelineType type)
     {
-        using Path = std::filesystem::path;
-
-        static const char* shaderDirPath = "res/shaders";
-
-        Path fullVertexShaderPath = Path(shaderDirPath) / (std::string(shaderFilepaths[static_cast<int>(shaderTag)]) + vertPostfix + shaderExtension);
-        Path fullFragmentShaderPath = Path(shaderDirPath) / (std::string(shaderFilepaths[static_cast<int>(shaderTag)]) + fragPostfix + shaderExtension);
-
-        Shader vertexShader(ShaderType::Vertex, fullVertexShaderPath.string().c_str());
-        Shader fragmentShader(ShaderType::Fragment, fullFragmentShaderPath.string().c_str());
+        Shader vertexShader(type, ShaderType::Vertex, ResourceManager::loadShader(getShaderFileName(type, ShaderType::Vertex)));
+        Shader fragmentShader(type, ShaderType::Fragment, ResourceManager::loadShader(getShaderFileName(type, ShaderType::Fragment)));
 
         return new ShaderPipeline({&vertexShader, &fragmentShader});
     }

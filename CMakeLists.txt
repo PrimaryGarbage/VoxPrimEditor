@@ -15,6 +15,9 @@ set(SRC_FILES
     exception.hpp typedefs.hpp
     app.hpp app.cpp
     input.hpp input.cpp
+    resource_manager.hpp resource_manager.cpp
+    enum_utils.hpp
+    string_tools.hpp
 )
 
 set(GRAPHICS_SRC_FILES 
@@ -33,11 +36,12 @@ set(GRAPHICS_SRC_FILES
     voxel_transform.hpp voxel_transform.cpp
     camera.hpp camera.cpp
     voxel.hpp voxel.cpp
-    shader_pipeline_type.hpp
+    shader_utils.hpp
 )
 
 set(EXTERNAL_SRC_FILES 
     glad.c glad.h
+    magic_enum.hpp
 )
 
 list(TRANSFORM SRC_FILES PREPEND "src/")

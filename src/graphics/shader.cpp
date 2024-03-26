@@ -20,18 +20,12 @@ namespace prim
         }
     }
 
-    Shader::Shader(ShaderType type, const char* filepath) : type(type), glType(getGlShaderType(type))
+    Shader::Shader(ShaderPipelineType pipelineType, ShaderType type, std::string data) 
+        : pipelineType(pipelineType), type(type), glType(getGlShaderType(type))
     {
         glCall(glId = glCreateShader(getGlShaderType(type)));
-        std::ifstream shaderStream(filepath, std::ios::in);
-        if(shaderStream.bad()) throw EXCEPTION("Failed to open filestream for shader file.");
 
-        std::stringstream shaderSS;
-        shaderSS << shaderStream.rdbuf();
-        shaderStream.close();
-
-        std::string src = shaderSS.str();
-        const char* const srcPtr = src.c_str();
+        const char* const srcPtr = data.c_str();
         glCall(glShaderSource(glId, 1, &srcPtr, NULL));
         glCall(glCompileShader(glId));
 
@@ -44,11 +38,11 @@ namespace prim
             std::string shaderErrorMessage;
             shaderErrorMessage.reserve(infoLogLength + 1);
             glCall(glGetShaderInfoLog(glId, infoLogLength, NULL, &shaderErrorMessage[0]));
-            Logger::inst().logError("Error during shader compilation. Filepath: {0}; Error message: {1}", filepath, shaderErrorMessage.c_str());
+            Logger::inst().logError("Error during shader compilation. Shader pipeline type: {0}; Error message: {1}", enum_str(pipelineType), shaderErrorMessage);
         }
         else
         {
-            Logger::inst().logInfo("Finished shader compilation. Filepath: {0};", filepath);
+            Logger::inst().logInfo("Finished shader compilation. Shader pipeline type: {0}", enum_str(pipelineType));
         }
     }
     
@@ -75,7 +69,7 @@ namespace prim
         {
             glCall(glDeleteShader(glId));
             glId = 0;
-            Logger::inst().logInfo("Shader deleted.");
+            Logger::inst().logInfo("Shader deleted. Shader pipeline type: {0}, Shader type: {1}", enum_str(pipelineType), enum_str(type));
         }
     }
     

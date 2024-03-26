@@ -2,7 +2,7 @@
 #include "renderer.hpp"
 #include "primitives.hpp"
 #include "shader_pipeline.hpp"
-#include "shader_pipeline_type.hpp"
+#include "shader_utils.hpp"
 
 namespace prim
 {
