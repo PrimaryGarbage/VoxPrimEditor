@@ -31,7 +31,7 @@ namespace prim
         if(glId != 0) 
         {
             glCall(glDeleteBuffers(1, &glId));
-            Logger::inst().logInfo("VertexBuffer deleted.");
+            Logger::inst().logInfo("VertexBuffer deleted. GL ID: {0}", glId);
         }
     }
 

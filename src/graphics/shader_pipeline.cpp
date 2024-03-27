@@ -6,25 +6,7 @@
 
 namespace prim
 {
-    i32 ShaderPipeline::getUniformLocation(const char* name) const
-    {
-        const auto& foundIter = uniformLocationCache.find(name);
-        if(foundIter == uniformLocationCache.end())
-        {
-            i32 uniformId;
-            glCall(uniformId = glGetUniformLocation(glId, name));
-            if(uniformId < 0) throw EXCEPTION(std::format("Failed to find shader uniform with the given name. Name: {0}", name));
-
-            uniformLocationCache[name] = uniformId;
-            return uniformId;
-        }
-        else
-        {
-            return foundIter->second;
-        }
-    }
-
-    ShaderPipeline::ShaderPipeline(std::initializer_list<const Shader*> shaders)
+    ShaderPipeline::ShaderPipeline(ShaderPipelineType pipelineType, std::initializer_list<const Shader*> shaders) : pipelineType(pipelineType)
     {
         glCall(glId = glCreateProgram());
         for(const Shader* shader : shaders)
@@ -46,7 +28,7 @@ namespace prim
         }
         else
         {
-            Logger::inst().logInfo("Shader program linked successfully.");
+            Logger::inst().logInfo("Shader program linked successfully. Shader pipeline type: {0}", enum_str(pipelineType));
         }
 
         for(const Shader* shader : shaders)
@@ -58,6 +40,25 @@ namespace prim
     ShaderPipeline::~ShaderPipeline()
     {
         glCall(glDeleteProgram(glId));
+        Logger::inst().logInfo("Shader program deleted. GL ID: {0}, shader pipeline type: {1}", glId, enum_str(pipelineType));
+    }
+
+    i32 ShaderPipeline::getUniformLocation(const char* name) const
+    {
+        const auto& foundIter = uniformLocationCache.find(name);
+        if(foundIter == uniformLocationCache.end())
+        {
+            i32 uniformId;
+            glCall(uniformId = glGetUniformLocation(glId, name));
+            if(uniformId < 0) throw EXCEPTION(std::format("Failed to find shader uniform with the given name. Name: {0}", name));
+
+            uniformLocationCache[name] = uniformId;
+            return uniformId;
+        }
+        else
+        {
+            return foundIter->second;
+        }
     }
     
     void ShaderPipeline::bind() const noexcept

@@ -204,6 +204,6 @@ namespace prim
         Shader vertexShader(type, ShaderType::Vertex, ResourceManager::loadShader(getShaderFileName(type, ShaderType::Vertex)));
         Shader fragmentShader(type, ShaderType::Fragment, ResourceManager::loadShader(getShaderFileName(type, ShaderType::Fragment)));
 
-        return new ShaderPipeline({&vertexShader, &fragmentShader});
+        return new ShaderPipeline(type, {&vertexShader, &fragmentShader});
     }
 }

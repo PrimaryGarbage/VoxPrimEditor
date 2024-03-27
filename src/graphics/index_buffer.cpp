@@ -33,7 +33,7 @@ namespace prim
         if(glId != 0) 
         {
             glCall(glDeleteBuffers(1, &glId));
-            Logger::inst().logInfo("IndexBuffer deleted.");
+            Logger::inst().logInfo("IndexBuffer deleted. GL ID: {0}", glId);
         }
     }
     

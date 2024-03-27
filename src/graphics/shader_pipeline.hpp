@@ -13,11 +13,12 @@ namespace prim
     {
     private:
         u32 glId;
+        ShaderPipelineType pipelineType;
         mutable std::unordered_map<std::string, u32> uniformLocationCache;
 
         i32 getUniformLocation(const char* name) const;
     public:
-        ShaderPipeline(std::initializer_list<const Shader*> shaders);
+        ShaderPipeline(ShaderPipelineType pipelineType, std::initializer_list<const Shader*> shaders);
         ~ShaderPipeline();
 
         void bind() const noexcept;
