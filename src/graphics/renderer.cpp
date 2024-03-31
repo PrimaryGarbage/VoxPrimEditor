@@ -162,6 +162,11 @@ namespace prim
         currentShader->setUniform("mvp", viewProjectMatrix * matrix);
     }
     
+    void Renderer::setCursorMode(CursorMode mode) const noexcept
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, static_cast<int>(mode));
+    }
+    
     ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType tag)
     {
         if(!shaderPipelineCache.contains(tag))

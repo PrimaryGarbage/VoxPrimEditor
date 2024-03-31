@@ -222,6 +222,9 @@ namespace prim
 			mouse.buttons[i].just = false;
 		}
 
+		mouse.oldX = mouse.x;
+		mouse.oldY = mouse.y;
+
 		for(int i = 0; i < keysCount; ++i)
 		{
 			keys[i].just = false;
@@ -375,6 +378,11 @@ namespace prim
 	{
 		return glm::vec2(mouse.x, mouse.y);
 	}
+
+    glm::vec2 Input::getCursorDelta()
+    {
+        return glm::vec2(mouse.x - mouse.oldX, mouse.y - mouse.oldY);
+    }
 
 	void Input::addAction(const std::string name, std::initializer_list<ActionCause> actionCauses)
 	{

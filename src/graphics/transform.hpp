@@ -15,6 +15,12 @@ namespace prim
         glm::vec3 scale{1.0f, 1.0f, 1.0f};
 
         glm::mat4 getModelMatrix() const noexcept;
+        glm::vec3 forward() const noexcept;
+        glm::vec3 backward() const noexcept;
+        glm::vec3 right() const noexcept;
+        glm::vec3 left() const noexcept;
+        glm::vec3 up() const noexcept;
+        glm::vec3 down() const noexcept;
     };
 }
 

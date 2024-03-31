@@ -14,6 +14,7 @@ set(SRC_FILES
     main.cpp
     exception.hpp typedefs.hpp
     app.hpp app.cpp
+    app_options.hpp
     input.hpp input.cpp
     resource_manager.hpp resource_manager.cpp
     enum_utils.hpp

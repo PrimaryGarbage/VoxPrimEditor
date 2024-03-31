@@ -9,13 +9,21 @@
 #include "camera.hpp"
 #include "voxel.hpp"
 #include "GLFW/glfw3.h"
+#include "shader_utils.hpp"
 #include <unordered_map>
 
 namespace prim
 {
+    //forward declaration
     class DefaultPrimitives;
     class ShaderPipeline;
-    enum class ShaderPipelineType;
+
+    enum class CursorMode { 
+        Normal = GLFW_CURSOR_NORMAL, 
+        Captured = GLFW_CURSOR_CAPTURED, 
+        Disabled = GLFW_CURSOR_DISABLED,
+        Hidden = GLFW_CURSOR_HIDDEN
+    };
 
     class Renderer
     {
@@ -54,6 +62,7 @@ namespace prim
         void draw(const Model& model);
         void setCurrentShaderPipeline(const ShaderPipeline* shader) noexcept;
         void setModelMatrix(glm::mat4 matrix);
+        void setCursorMode(CursorMode mode) const noexcept;
         ShaderPipeline* getShaderPipeline(ShaderPipelineType tag);
         Camera* getCamera() noexcept;
         const DefaultPrimitives* getDefaultPrimitives() const noexcept;

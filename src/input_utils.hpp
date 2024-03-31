@@ -51,10 +51,12 @@ struct MouseInfo
 	static const int buttonCount = 11;
 
 	PressInfo buttons[buttonCount]{};
-	double x = 0.0;
-	double y = 0.0;
-	double scrollDeltaX = 0.0f;
-	double scrollDeltaY = 0.0f;
+	double oldX{0.0};
+	double oldY{0.0};
+	double x{0.0};
+	double y{0.0};
+	double scrollDeltaX{0.0f};
+	double scrollDeltaY{0.0f};
 };
 
 struct Gamepad

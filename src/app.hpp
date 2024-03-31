@@ -10,6 +10,7 @@ namespace prim
     // forward declaration
     class Renderer;
     class Input;
+    enum class AppState;
 
     class App
     {
@@ -17,6 +18,10 @@ namespace prim
         Unp<Renderer> renderer;
         Unp<Input> input;
         Logger logger;
+        AppState currentState;
+
+        void determineState();
+        void executeStateActions();
     public:
         App();
         ~App();

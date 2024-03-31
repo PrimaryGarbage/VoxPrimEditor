@@ -73,6 +73,7 @@ public:
 	float getAxis(const std::string axisName);
 
 	glm::vec2 getCursorPos();
+	glm::vec2 getCursorDelta();
 
 	void addAction(const std::string name, std::initializer_list<ActionCause> actionCauses);
 	void addAxis(const std::string name, std::initializer_list<AxisCause> axisCauses);
