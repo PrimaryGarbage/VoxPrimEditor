@@ -42,7 +42,7 @@ namespace prim
         }
         else
         {
-            Logger::inst().logInfo("Finished shader compilation. Shader pipeline type: {0}", enum_str(pipelineType));
+            Logger::inst().logInfo("Finished shader compilation. Shader pipeline type: {0}; Shader type: {1}", enum_str(pipelineType), enum_str(type));
         }
     }
     

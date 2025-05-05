@@ -14,9 +14,6 @@
 #include <time.h>
 #include <ctime>
 
-#define INFO_PREFIX "[INFO]"
-#define WARNING_PREFIX "[WARNING]"
-#define ERROR_PREFIX "[ERROR]"
 
 namespace prim
 {
@@ -25,6 +22,10 @@ namespace prim
     class Logger
     {
     private:
+        const char* INFO_PREFIX = "[INFO]";
+        const char* WARNING_PREFIX = "[WARNING]";
+        const char* ERROR_PREFIX = "[ERROR]";
+
         static std::string currentDateTimeString(const char* format = "%d-%m-%Y %H:%M:%S")
         {
             std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());

@@ -63,7 +63,7 @@ namespace prim
         void setCurrentShaderPipeline(const ShaderPipeline* shader) noexcept;
         void setModelMatrix(glm::mat4 matrix);
         void setCursorMode(CursorMode mode) const noexcept;
-        ShaderPipeline* getShaderPipeline(ShaderPipelineType tag);
+        ShaderPipeline* getShaderPipeline(ShaderPipelineType type);
         Camera* getCamera() noexcept;
         const DefaultPrimitives* getDefaultPrimitives() const noexcept;
     };

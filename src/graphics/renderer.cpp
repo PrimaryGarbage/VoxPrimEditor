@@ -167,14 +167,14 @@ namespace prim
         glfwSetInputMode(window, GLFW_CURSOR, static_cast<int>(mode));
     }
     
-    ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType tag)
+    ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType type)
     {
-        if(!shaderPipelineCache.contains(tag))
+        if(!shaderPipelineCache.contains(type))
         {
-            shaderPipelineCache[tag] = Unp<ShaderPipeline>(loadShaderPipeline(tag));
+            shaderPipelineCache[type] = Unp<ShaderPipeline>(loadShaderPipeline(type));
         }
 
-        return shaderPipelineCache[tag].get();
+        return shaderPipelineCache[type].get();
     }
     
     Camera* Renderer::getCamera() noexcept
