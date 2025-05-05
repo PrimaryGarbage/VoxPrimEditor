@@ -5,7 +5,6 @@
 #include "input.hpp"
 #include "opengl_utils.hpp"
 #include "shader_pipeline.hpp"
-#include "primitives.hpp"
 #include "resource_manager.hpp"
 #include <functional>
 #include <filesystem>
@@ -56,11 +55,6 @@ namespace prim
             currentShader = shaderPipelineCache[ShaderPipelineType::Default].get();
             currentShader->bind();
 
-            // setup default primitives for common use. Maybe there's a better way to handle this
-            defaultPrimitives = std::make_unique<DefaultPrimitives>();
-            defaultPrimitives->cube.reset(new Mesh(Primitives::cube(1.0f)));
-            defaultPrimitives->plane.reset(new Mesh(Primitives::plane(1.0f, 1.0f)));
-
             rendererMapping[window] = this;
         }
         catch(Exception ex)
@@ -78,7 +72,6 @@ namespace prim
         {
             shaderPair.second.reset();
         }
-        defaultPrimitives.reset();
 
         glfwDestroyWindow(window);
         rendererMapping.erase(window);
@@ -167,7 +160,7 @@ namespace prim
         glfwSetInputMode(window, GLFW_CURSOR, static_cast<int>(mode));
     }
     
-    ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType type)
+    const ShaderPipeline* Renderer::getShaderPipeline(ShaderPipelineType type)
     {
         if(!shaderPipelineCache.contains(type))
         {
@@ -182,11 +175,6 @@ namespace prim
         return &camera;
     }
     
-    const DefaultPrimitives* Renderer::getDefaultPrimitives() const noexcept
-    {
-        return defaultPrimitives.get();
-    }
-
     // glfw callbacks //
     void Renderer::errorCallback(int error, const char* description)
     {

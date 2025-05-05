@@ -8,10 +8,11 @@ namespace prim
 {
     void Voxel::draw(Renderer& renderer) const
     {
-        ShaderPipeline* shader = renderer.getShaderPipeline(ShaderPipelineType::Voxel);
+        static const ShaderPipeline* shader = renderer.getShaderPipeline(ShaderPipelineType::Voxel);
+        static const Mesh* cubeMesh = Primitives::defaultCube();
         shader->setUniform("albedo", albedo);
         renderer.setModelMatrix(transform.getModelMatrix());
         renderer.setCurrentShaderPipeline(shader);
-        renderer.draw(*renderer.getDefaultPrimitives()->cube);
+        renderer.draw(*cubeMesh);
     }
 }

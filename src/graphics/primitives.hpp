@@ -2,21 +2,18 @@
 #define __PRIMITIVES_HPP__
 
 #include "mesh.hpp"
+#include "typedefs.hpp"
 
 namespace prim
 {
-    class DefaultPrimitives
-    {
-    public:
-        Unp<Mesh> cube;
-        Unp<Mesh> plane;
-    };
-
     class Primitives
     {
     public:
-        static Mesh cube(float size);
-        static Mesh plane(float width, float heigth);
+        static const Mesh* defaultCube();
+        static const Mesh* defaultPlane();
+
+        static Mesh createCubeMesh(float size);
+        static Mesh createPlaneMesh(float width, float heigth);
     };
 }
 

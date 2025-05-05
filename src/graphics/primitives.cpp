@@ -3,7 +3,21 @@
 
 namespace prim
 {
-    Mesh Primitives::cube(float size)
+    const Mesh* Primitives::defaultCube()
+    {
+        static const Mesh mesh = createCubeMesh(1.0f);
+
+        return &mesh;
+    }
+
+    const Mesh* Primitives::defaultPlane()
+    {
+        static const Mesh mesh = createPlaneMesh(1.0f, 1.0f);
+
+        return &mesh;
+    }
+
+    Mesh Primitives::createCubeMesh(float size)
     {
         constexpr static u32 dataSize = 48 * sizeof(float);
         constexpr static u32 indexCount = 36;
@@ -42,7 +56,7 @@ namespace prim
         return Mesh(VertexBuffer(vertexData, dataSize, layout), IndexBuffer(indexData, indexCount));
     }
     
-    Mesh Primitives::plane(float width, float heigth)
+    Mesh Primitives::createPlaneMesh(float width, float heigth)
     {
         constexpr static u32 dataSize = 20 * sizeof(float);
         constexpr static u32 indexCount = 6;

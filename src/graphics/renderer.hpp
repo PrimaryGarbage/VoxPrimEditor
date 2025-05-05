@@ -15,7 +15,6 @@
 namespace prim
 {
     //forward declaration
-    class DefaultPrimitives;
     class ShaderPipeline;
 
     enum class CursorMode { 
@@ -37,7 +36,6 @@ namespace prim
         u32 vertexArrayId;
         glm::mat4 viewProjectMatrix;
         bool isVPMatrixStale{true};
-        Unp<DefaultPrimitives> defaultPrimitives;
         std::unordered_map<ShaderPipelineType, Unp<ShaderPipeline>> shaderPipelineCache;
 
         Logger logger;
@@ -63,9 +61,8 @@ namespace prim
         void setCurrentShaderPipeline(const ShaderPipeline* shader) noexcept;
         void setModelMatrix(glm::mat4 matrix);
         void setCursorMode(CursorMode mode) const noexcept;
-        ShaderPipeline* getShaderPipeline(ShaderPipelineType type);
+        const ShaderPipeline* getShaderPipeline(ShaderPipelineType type);
         Camera* getCamera() noexcept;
-        const DefaultPrimitives* getDefaultPrimitives() const noexcept;
     };
 }
 
